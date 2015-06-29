@@ -4,9 +4,11 @@ require 'sinatra'
 require 'open-uri'
 require 'nokogiri'
 require 'tilt/erb'
+require 'net/http'
 
 def boot()
 	set :port, 8080
+	# disable :show_exceptions
 	
 	get '/' do
 		erb :index
@@ -15,21 +17,20 @@ def boot()
 	post '/results/' do
 		# get the post data and append it to the url
 		@query = params[:query]
-		@url = "https://"+@query
-		@file = open(@url)
-		@flag = "Yes, it is up!"
-		#add handler for 404 errors to rescue and flag as false
+		@addr = "http://www."+@query+"/"
+		puts "Requesting "+@addr+" ..."
+		url = URI.parse(@addr)
+		req = Net::HTTP.new(url.host, url.port)
+		res = req.request_head(url.path)
+		# puts res.code
+		@flag = "It is down!"
+		puts res.code # will need to handle multiple different http codes
+		if (res.code == "200") then (@flag = "It is up!") end
 		erb :results
 	end
 
-	rescue OpenURI::HTTPError => e #handler for 404 and other errors
-		if e.message == '404 Not Found'
-			@flag = "Nope, it is down!"
-			erb :results
-		else
-			raise e
-		end
-	end
+	rescue Exception
+		puts "I refuse to fail!"
 end
 
 boot()
