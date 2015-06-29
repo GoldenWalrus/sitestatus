@@ -1,11 +1,14 @@
 <head>
 <title>Site Status Checker</title>
+<%= erb :header %>
 </head>
 <body>
+<div>
 <h1>Site Status Checker</h1>
 <p>Is it down or not? Search websites to check their status.</p>
 <form method="post" action="/results/">
-<input type="search" id="query" name="query" placeholder="example.com"></input>
-<button type="submit">Go</submit>
+<input class="input-search" type="search" id="query" name="query" placeholder="example.com"></input>
+<button class="btn">Go</submit>
 </form>
+</div>
 </body>

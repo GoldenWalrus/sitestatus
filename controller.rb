@@ -8,12 +8,12 @@ require 'net/http'
 
 def boot()
 	set :port, 8080
-	# disable :show_exceptions
+	disable :show_exceptions
 	
 	get '/' do
 		erb :index
 	end
-	
+
 	post '/results/' do
 		# get the post data and append it to the url
 		@query = params[:query]
@@ -24,12 +24,12 @@ def boot()
 		res = req.request_head(url.path)
 		# puts res.code
 		@flag = "It is down!"
-		puts res.code # will need to handle multiple different http codes
-		if (res.code == "200") then (@flag = "It is up!") end
+		puts "Response code: "+res.code # will need to handle multiple different http codes
+		if (res.code.to_i < 400) then (@flag = "It is up!") end
 		erb :results
 	end
 
-	rescue Exception
+	rescue SocketError
 		puts "I refuse to fail!"
 end
 

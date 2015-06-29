@@ -10,7 +10,7 @@ def test()
 	puts flag
 
 	rescue Exception
-		puts "It is down!"
+		puts "Error!"
 end
 
 test()
