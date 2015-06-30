@@ -19,18 +19,16 @@ def boot()
 		@query = params[:query]
 		@addr = "http://www."+@query+"/"
 		puts "Requesting "+@addr+" ..."
-		url = URI.parse(@addr)
-		req = Net::HTTP.new(url.host, url.port)
-		res = req.request_head(url.path)
-		# puts res.code
-		@flag = "It is down!"
-		puts "Response code: "+res.code # will need to handle multiple different http codes
-		if (res.code.to_i < 400) then (@flag = "It is up!") end
+		@req = Net::HTTP.get_response(URI.parse(@addr))
+		@res = "Unknown..."
+		if (@req.code.to_i < 400) then @res = "Green: Site is up" end
 		erb :results
 	end
-
-	rescue SocketError
-		puts "I refuse to fail!"
+	
+	error do
+		@res = "Red: Site not found"
+		erb :results
+	end
 end
 
 boot()
