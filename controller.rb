@@ -20,13 +20,13 @@ def boot()
 		@addr = "http://www."+@query+"/"
 		puts "Requesting "+@addr+" ..."
 		@req = Net::HTTP.get_response(URI.parse(@addr))
-		@res = "<p>Red: Site not found</p>"
-		if (@req.code.to_i < 400) then @res = "<p>Green: Site is up</p>" end
+		@res = "<p style='color:red;'>Site not found</p>"
+		if (@req.code.to_i < 400) then @res = "<p style='color:green;'color:red;>Site is up</p>" end
 		erb :results
 	end
 	
 	error do
-		@res = "<p>Red: Site not found</p>"
+		@res = "<p style='color:red;'>Site not found</p>"
 		erb :results
 	end
 end
